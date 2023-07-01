@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-bus-depl
+  labels:
+    app: event-bus-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-bus-depl
+  template:
+    metadata:
+      labels:
+        app: event-bus-depl
+    spec:
+      containers:
+      - name: event-bus-depl
+        image: 03322504719/microservices-event-bus

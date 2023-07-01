@@ -19,7 +19,7 @@ app.post('/events', async (req, res)=>{
 
     events.push({type, content})
 
-    await fetch(`http://localhost:4000/events`,{
+    await fetch(`http://posts-svc:4000/events`,{
         method: 'POST',
         body: JSON.stringify({type, content}),
         headers:{
@@ -27,23 +27,23 @@ app.post('/events', async (req, res)=>{
         }
     })
 
-    await fetch(`http://localhost:4001/events`,{
-        method: 'POST',
-        body: JSON.stringify({type, content}),
-        headers:{
-            'Content-Type': 'application/json'
-        }
-    }).catch((error)=>{
+    // await fetch(`http://localhost:4001/events`,{
+    //     method: 'POST',
+    //     body: JSON.stringify({type, content}),
+    //     headers:{
+    //         'Content-Type': 'application/json'
+    //     }
+    // }).catch((error)=>{
         
-    })
+    // })
 
-    await fetch(`http://localhost:4003/events`,{
-        method: 'POST',
-        body: JSON.stringify({type, content}),
-        headers:{
-            'Content-Type': 'application/json'
-        }
-    })
+    // await fetch(`http://localhost:4003/events`,{
+    //     method: 'POST',
+    //     body: JSON.stringify({type, content}),
+    //     headers:{
+    //         'Content-Type': 'application/json'
+    //     }
+    // })
 
     return res.status(200).json({msg:''})
 })

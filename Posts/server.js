@@ -26,7 +26,7 @@ app.post('/posts', async (req,res)=>{
     const id = crypto.randomBytes(4).toString('hex');
     posts[id] = {id, post}
 
-    await fetch(`http://localhost:4002/events`,{
+    await fetch(`http://event-bus-svc:4002/events`,{
         method: 'POST',
         body: JSON.stringify({
             type: "PostCreated",
@@ -39,10 +39,13 @@ app.post('/posts', async (req,res)=>{
 })
 
 app.post('/events', (req,res)=>{
+    console.log('event received')
     return res.status(200).json({msg: ''})
 })
 
 const port = process.env.PORT
-app.listen(port, ()=>{
+app.listen(port, async ()=>{
     console.log(`listening on port: ${port}`)
+    const resp = await fetch(`http://event-bus-svc:4002/events`)
+    console.log("resp: ", await resp.json())
 })

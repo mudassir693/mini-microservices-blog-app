@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-depl
+  labels:
+    app: posts-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: posts-depl
+  template:
+    metadata:
+      labels:
+        app: posts-depl
+    spec:
+      containers:
+      - name: posts-depl
+        image: 03322504719/microservices-posts
