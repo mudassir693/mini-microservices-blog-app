@@ -4,7 +4,9 @@ dotenv.config()
 import express from 'express'
 import crypto from 'crypto'
 import fetch from 'node-fetch'
+import amqp from 'amqplib'
 
+import { commentAction, queueConstants } from '../Common/index.js'
 import {posts} from './posts.js'
 
 const app = express()
@@ -12,6 +14,16 @@ const app = express()
 // middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
+let channel;
+const QueueConnection = async ()=>{
+    const rmqServer = process.env.RABBITMQ_SERVER_URL
+    const connection = await amqp.connect(rmqServer);
+    channel = await connection.createChannel();
+    await channel.assertQueue(queueConstants.POSTS);
+}
+
+QueueConnection()
 
 // routes
 app.get('/posts',(req, res)=>{
@@ -26,14 +38,8 @@ app.post('/posts', async (req,res)=>{
     const id = crypto.randomBytes(4).toString('hex');
     posts[id] = {id, post}
 
-    await fetch(`http://event-bus-svc:4002/events`,{
-        method: 'POST',
-        body: JSON.stringify({
-            type: "PostCreated",
-            content: {id, post},
-        }),
-        headers: {'Content-Type': 'application/json'}
-    })
+    // emit queueConstants.COMMENTS 
+    channel.sendToQueue(queueConstants.COMMENTS, Buffer.from(JSON.stringify({id, post, type:commentAction.POST_CREATED})))
 
     return res.status(200).json({msg: 'post created successfully'})
 })
@@ -46,6 +52,4 @@ app.post('/events', (req,res)=>{
 const port = process.env.PORT
 app.listen(port, async ()=>{
     console.log(`listening on port: ${port}`)
-    const resp = await fetch(`http://event-bus-svc:4002/events`)
-    console.log("resp: ", await resp.json())
 })
