@@ -4,7 +4,9 @@ dotenv.config()
 import express, { response } from 'express'
 import fetch from 'node-fetch'
 import { commentAction, queueConstants } from '../Common/index.js'
-import amqp from 'amqplib'
+
+// import amqp from 'amqplib'
+// changes here
 
 const app = express()
 
@@ -32,8 +34,10 @@ const QueueConnection = async ()=>{
     })
 }
 
-QueueConnection()
+// another line here
 
+QueueConnection()
+// add
 const port = process.env.PORT
 app.listen(port, ()=>{
     console.log(`listening on ${port}`)
