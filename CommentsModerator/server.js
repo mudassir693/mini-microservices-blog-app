@@ -10,8 +10,13 @@ import { commentAction, queueConstants } from '../Common/index.js'
 
 const app = express()
 
+// app.use(express.json())
+// app.use(express.urlencoded({ extended:true}))
+
+
 app.use(express.json())
 app.use(express.urlencoded({ extended:true}))
+
 
 let channel;
 const QueueConnection = async ()=>{
@@ -34,11 +39,12 @@ const QueueConnection = async ()=>{
     })
 }
 
-// another line here
-
+// another line hore
+// what else
 QueueConnection()
 // add
 const port = process.env.PORT
 app.listen(port, ()=>{
     console.log(`listening on ${port}`)
 })
+// close
