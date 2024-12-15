@@ -35,7 +35,11 @@ const QueueConnection = async ()=>{
             status,
             type: commentAction.COMMENT_MODERATED
         }
+        // channel.sendToQueue(queueConstants.COMMENTS, Buffer.from(JSON.stringify(updatedComment)))4
+        // new line
+        
         channel.sendToQueue(queueConstants.COMMENTS, Buffer.from(JSON.stringify(updatedComment)))
+        
     })
 }
 
