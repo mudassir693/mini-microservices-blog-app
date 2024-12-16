@@ -1,6 +1,11 @@
 import dotenv from 'dotenv';
 dotenv.config()
 
+// import express from 'express'
+// import crypto from 'crypto'
+// import fetch from 'node-fetch'
+// import amqp from 'amqplib'
+
 import express from 'express'
 import crypto from 'crypto'
 import fetch from 'node-fetch'
@@ -17,7 +22,7 @@ app.use(express.urlencoded({ extended: true }))
 
 let channel;
 const QueueConnection = async ()=>{
-    const rmqServer = process.env.RABBITMQ_SERVER_URL
+    const rmqServer = process.env.RABBITMQ_SERVER_URL  // localhost:67000
     const connection = await amqp.connect(rmqServer);
     channel = await connection.createChannel();
     await channel.assertQueue(queueConstants.POSTS);
@@ -25,7 +30,8 @@ const QueueConnection = async ()=>{
 
 QueueConnection()
 
-// routes
+
+// get route
 app.get('/posts',(req, res)=>{
     return res.status(200).json({posts})
 })
@@ -49,7 +55,7 @@ app.post('/events', (req,res)=>{
     return res.status(200).json({msg: ''})
 })
 
-const port = process.env.PORT
+const port = 5000
 app.listen(port, async ()=>{
     console.log(`listening on port: ${port}`)
 })
