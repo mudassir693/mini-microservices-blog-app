@@ -9,8 +9,9 @@ import amqp from 'amqplib'
 import { commentAction, queueConstants } from '../Common/index.js'
 import {posts} from './posts.js'
 
-const app = express()
+// const app = express()
 
+let app = express()
 // middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -25,7 +26,6 @@ const QueueConnection = async ()=>{
 
 QueueConnection()
 
-// routes
 app.get('/posts',(req, res)=>{
     return res.status(200).json({posts})
 })
@@ -38,7 +38,6 @@ app.post('/posts', async (req,res)=>{
     const id = crypto.randomBytes(4).toString('hex');
     posts[id] = {id, post}
 
-    // emit queueConstants.COMMENTS 
     channel.sendToQueue(queueConstants.COMMENTS, Buffer.from(JSON.stringify({id, post, type:commentAction.POST_CREATED})))
 
     return res.status(200).json({msg: 'post created successfully'})
