@@ -19,14 +19,24 @@ app.post('/events', async (req, res)=>{
 
     events.push({type, content})
 
-    await fetch(`http://posts-svc:4000/events`,{
+    // await fetch(`http://posts-svc:4000/events`,{
+    //     method: 'POST',
+    //     body: JSON.stringify({type, content}),
+    //     headers:{
+    //         'Content-Type': 'application/json'
+    //     }
+    // })
+
+    // events.push({type, content})
+
+    await fetch('http://posts-svc:4000/events',{
         method: 'POST',
         body: JSON.stringify({type, content}),
         headers:{
             'Content-Type': 'application/json'
         }
     })
-
+    
     // await fetch(`http://localhost:4001/events`,{
     //     method: 'POST',
     //     body: JSON.stringify({type, content}),
@@ -52,6 +62,9 @@ app.get('/events', (req, res)=>{
     return res.status(200).json({events})
 })
 
+// morechanges
+
+// this line as well
 const port = process.env.PORT
 app.listen(port, ()=>{
     console.log(`listening on ${port}`)

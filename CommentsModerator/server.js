@@ -4,12 +4,19 @@ dotenv.config()
 import express, { response } from 'express'
 import fetch from 'node-fetch'
 import { commentAction, queueConstants } from '../Common/index.js'
-import amqp from 'amqplib'
+
+// import amqp from 'amqplib'
+// changes here
 
 const app = express()
 
+// app.use(express.json())
+// app.use(express.urlencoded({ extended:true}))
+
+
 app.use(express.json())
 app.use(express.urlencoded({ extended:true}))
+
 
 let channel;
 const QueueConnection = async ()=>{
@@ -28,13 +35,20 @@ const QueueConnection = async ()=>{
             status,
             type: commentAction.COMMENT_MODERATED
         }
+        // channel.sendToQueue(queueConstants.COMMENTS, Buffer.from(JSON.stringify(updatedComment)))4
+        // new line
+        
         channel.sendToQueue(queueConstants.COMMENTS, Buffer.from(JSON.stringify(updatedComment)))
+        
     })
 }
 
+// another line hore
+// what else
 QueueConnection()
-
+// add
 const port = process.env.PORT
 app.listen(port, ()=>{
     console.log(`listening on ${port}`)
 })
+// close
