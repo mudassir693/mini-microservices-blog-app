@@ -17,3 +17,6 @@ spec:
       containers:
       - name: posts-depl
         image: 03322504719/microservices-posts
+
+
+# nothing
