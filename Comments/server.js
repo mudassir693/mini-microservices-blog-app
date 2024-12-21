@@ -25,7 +25,6 @@ const QueueConnection = async () => {
         const connection = await amqp.connect(rmqServer)
         channel = await connection.createChannel()
         await channel.assertQueue(queueConstants.COMMENTS)
-
         channel.consume(queueConstants.COMMENTS, (data) => {
             const { type } = JSON.parse(data.content)
 
