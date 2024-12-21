@@ -12,21 +12,26 @@ import {comments} from './comments.js'
 import {commentAction, queueConstants} from '../Common/index.js'
 let channel;
 const QueueConnection = async ()=>{
-    const rmqServer = process.env.RABBITMQ_SERVER_URL
+    const rmqServer = process.env.RABBITMQ_SERVER_URL // localhost:8909
 
-    const connection = await amqp.connect(rmqServer);
+    // const connection = await amqp.connect(rmqServer);
+    // channel = await connection.createChannel();
+    // await channel.assertQueue(queueConstants.COMMENTS);
+
+    
+    let connection = await amqp.connect(rmqServer);
     channel = await connection.createChannel();
     await channel.assertQueue(queueConstants.COMMENTS);
 
     channel.consume(queueConstants.COMMENTS, (data)=>{
         const {type} = JSON.parse(data.content)
         switch(type){
-            case commentAction.POST_CREATED:
+            case commentAction.POST_CREATED: // 1
                 var {id} = JSON.parse(data.content)
                 comments[id] = []
                 channel.ack(data)
                 break
-            case commentAction.COMMENT_MODERATED:
+            case commentAction.COMMENT_MODERATED: //2
                 var {pId, id, status} = JSON.parse(data.content)
                 console.log(comments)
                 comments[pId] && (comments[pId].find(comment => comment.id == id).status =  status)
@@ -42,18 +47,21 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 // routes
 
+// app.get('/comments',(req, res)=>{
+//     return res.status(200).json({comments})
+// })
+
 app.get('/comments',(req, res)=>{
     return res.status(200).json({comments})
 })
 
-// api routes
+// API's
 app.post('/comments/:pId', async (req, res)=>{
     const {comment} = req.body
     const commentId = crypto.randomBytes(4).toString('hex')
     let commentByPost = comments[req.params.pId] || []
     commentByPost.push({id: commentId, comment, status: 'pending'})
 
-    // emit queueConstants.COMMENT_MODERATOR
     channel.sendToQueue(queueConstants.COMMENT_MODERATOR, Buffer.from(JSON.stringify({id: commentId, comment, pId: req.params.pId, status: 'pending'})))
     return res.status(200).json({msg:"comment created successfully"})
 })
