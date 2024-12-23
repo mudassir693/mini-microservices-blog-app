@@ -1,11 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config()
 
-// import express from 'express'
-// import crypto from 'crypto'
-// import fetch from 'node-fetch'
-// import amqp from 'amqplib'
-
 import express from 'express'
 import crypto from 'crypto'
 import fetch from 'node-fetch'
@@ -43,8 +38,7 @@ app.post('/posts', async (req,res)=>{
     }
     const id = crypto.randomBytes(4).toString('hex');
     posts[id] = {id, post}
-
-    // emit queueConstants.COMMENTS 
+    
     channel.sendToQueue(queueConstants.COMMENTS, Buffer.from(JSON.stringify({id, post, type:commentAction.POST_CREATED})))
 
     return res.status(200).json({msg: 'post created successfully'})
