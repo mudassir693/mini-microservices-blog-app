@@ -7,11 +7,9 @@ import fetch from 'node-fetch'
 import {events} from './events.js'
 
 const app = express()
-// middlewares
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-// routes
-// events receiver
 
 app.post('/events', async (req, res)=>{
     const {type, content, ...others} = req.body
@@ -26,24 +24,6 @@ app.post('/events', async (req, res)=>{
             'Content-Type': 'application/json'
         }
     })
-
-    // await fetch(`http://localhost:4001/events`,{
-    //     method: 'POST',
-    //     body: JSON.stringify({type, content}),
-    //     headers:{
-    //         'Content-Type': 'application/json'
-    //     }
-    // }).catch((error)=>{
-        
-    // })
-
-    // await fetch(`http://localhost:4003/events`,{
-    //     method: 'POST',
-    //     body: JSON.stringify({type, content}),
-    //     headers:{
-    //         'Content-Type': 'application/json'
-    //     }
-    // })
 
     return res.status(200).json({msg:''})
 })
